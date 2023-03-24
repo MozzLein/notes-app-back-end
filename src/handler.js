@@ -46,11 +46,12 @@ const addNoteHandler = (request, h) => {
     return response;
 };
 
-const getAllNotesHandler  = ()=>({
-    stauts : 'success',
-    data : {
+const getAllNotesHandler  = ()=>(
+    {
+        status : 'success',
+        data : {
         notes,
-    },
+    }
 })
 
 
@@ -58,6 +59,7 @@ const getNoteByIdHandler = (request, h)=>{
     const {id} = request.params;
 
     const note = notes.filter((n)=> n.id === id)[0];
+    console.log(note);
 
     if (note !== 'undefined'){
         return {
@@ -67,12 +69,14 @@ const getNoteByIdHandler = (request, h)=>{
             }
         }
     }
-    const response  = h.response ({
-        status : 'fail',
-        message:'Catatan tidak ditemukan',
-    });
-    response.code(404);
-    return response;
+    else if(note === 'undefined'){
+        const response  = h.response ({
+            status : 'fail',
+            message:'Catatan tidak ditemukan',
+        });
+        response.code(404);
+        return response;
+    }
 }
 
 const editNoteByIdHandler = (request, h) =>{
@@ -107,7 +111,7 @@ const deleteNoteByIdHandler = (request, h) => {
     const index = notes.findIndex((note) => note.id === id);
 
     if (index !== 1){
-        notes.splice(index, 1);
+        notes.splice(index, -1);
 
         const response = h.response({
             status : 'success',
